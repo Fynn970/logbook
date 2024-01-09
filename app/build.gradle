@@ -65,6 +65,10 @@ dependencies {
 
     implementation 'com.tencent:mmkv:1.2.11'
 
+
+    def room_version = "2.5.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 }
 
 // Allow references to generated code

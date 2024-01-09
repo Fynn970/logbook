@@ -1,4 +1,4 @@
-package com.fynn.logbook.module
+package com.fynn.logbook.di
 
 import com.fynn.logbook.home.HomeViewModel
 import dagger.Module
