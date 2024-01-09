@@ -1,6 +1,7 @@
 package com.fynn.logbook.base
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
@@ -24,6 +25,12 @@ abstract class BaseActivity<VB : ViewBinding>(
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    fun showToast(str: String){
+        if(TextUtils.isEmpty(str)){
+
+        }
     }
 
 

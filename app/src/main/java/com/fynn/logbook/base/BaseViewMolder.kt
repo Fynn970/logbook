@@ -6,14 +6,15 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 abstract class BaseViewMolder<UiState: IUiState, UiIntent: IUiEvent>: ViewModel() {
 
-     val _uiStateFlow = MutableStateFlow(initUiState())
-    val uiStateFlow: StateFlow<UiState> = _uiStateFlow
+    protected val _uiStateFlow = MutableStateFlow(initUiState())
+    val uiStateFlow: StateFlow<UiState> = _uiStateFlow.asStateFlow()
     private val _uiIntentFlow: Channel<UiIntent> = Channel()
     val uiIntentFlow: Flow<UiIntent> = _uiIntentFlow.receiveAsFlow()
 

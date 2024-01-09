@@ -1,9 +1,10 @@
 package com.fynn.logbook.home
 
+import android.widget.Toast
 import androidx.lifecycle.viewModelScope
 import com.fynn.logbook.base.BaseViewMolder
 import com.fynn.logbook.base.IUiEvent
-import com.fynn.logbook.vm.HomeUiState
+import com.fynn.logbook.util.getApplicationContext
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -17,17 +18,15 @@ class HomeViewModel : BaseViewMolder<HomeState, HomeIntent>() {
     override fun handleIntent(intent: IUiEvent) {
         when(intent){
             is HomeIntent.ToastInfo -> {
-                ToastInfo()
+                ToastInfo(intent.str)
             }
         }
     }
 
 
-    private fun ToastInfo(){
+    private fun ToastInfo(it: String) {
         viewModelScope.launch {
-            _uiStateFlow.update {
-                it.copy(str = "sdasdfvadw")
-            }
+
         }
     }
 
