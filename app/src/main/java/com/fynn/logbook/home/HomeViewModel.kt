@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.fynn.logbook.base.BaseViewMolder
 import com.fynn.logbook.base.IUiEvent
 import com.fynn.logbook.util.getApplicationContext
+import com.fynn.logbook.util.showToast
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel : BaseViewMolder<HomeState, HomeIntent>() {
+class HomeViewModel constructor() : BaseViewMolder<HomeState, HomeIntent>() {
 
 
     override fun initUiState(): HomeState {
@@ -26,7 +28,7 @@ class HomeViewModel : BaseViewMolder<HomeState, HomeIntent>() {
 
     private fun ToastInfo(it: String) {
         viewModelScope.launch {
-
+            showToast(it)
         }
     }
 

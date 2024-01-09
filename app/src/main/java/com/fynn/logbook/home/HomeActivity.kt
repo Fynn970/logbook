@@ -10,10 +10,11 @@ import com.fynn.logbook.base.BaseActivity
 import com.fynn.logbook.databinding.ActivityHomeBinding
 import com.fynn.logbook.util.observeState
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::inflate) {
-    private val viewModel by viewModels<HomeViewModel>()
+    @Inject lateinit var viewModel: HomeViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,6 +33,4 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
             }
         }
     }
-
-
 }
