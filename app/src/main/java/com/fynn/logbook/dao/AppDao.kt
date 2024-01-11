@@ -1,6 +1,7 @@
 package com.fynn.logbook.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import com.fynn.logbook.bean.ExperimentInfo
 
@@ -8,7 +9,9 @@ import com.fynn.logbook.bean.ExperimentInfo
 interface AppDao {
 
     @Query("SELECT * FROM expermentsamples")
-    fun getAllExperment():List<ExperimentInfo>
+    suspend fun getAllExperment():MutableList<ExperimentInfo>
 
+    @Insert(entity = ExperimentInfo::class)
+    suspend fun saveExperment(info: ExperimentInfo):Long
 
 }

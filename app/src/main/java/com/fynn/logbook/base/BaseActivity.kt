@@ -17,11 +17,16 @@ abstract class BaseActivity<VB : ViewBinding>(
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         _binding = inflater(layoutInflater)
         setContentView(binding.root)
-        super.onCreate(savedInstanceState)
+
+        initData()
+        initEvent()
     }
 
+    abstract fun initData()
+    abstract fun initEvent()
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

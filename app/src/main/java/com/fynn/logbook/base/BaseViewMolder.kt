@@ -1,5 +1,6 @@
 package com.fynn.logbook.base
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
@@ -40,5 +41,14 @@ abstract class BaseViewMolder<UiState: IUiState, UiIntent: IUiEvent>: ViewModel(
         }
     }
 
+    fun scope(block:suspend ()->Unit){
+        viewModelScope.launch {
+            try {
+                block()
+            }catch (e: Exception){
+                Log.e("error", e.message + "  ")
+            }
+        }
+    }
 
 }

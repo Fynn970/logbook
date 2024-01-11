@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "expermentsamples")
 data class ExperimentInfo(
-    @PrimaryKey val mExperimentId:String,
+    @PrimaryKey(autoGenerate = true) val mExperimentId:Int = 0,
     @ColumnInfo(name = "experiment_name") val mName: String,
-    @ColumnInfo(name = "create_date") val mCreateDate: String
+    @ColumnInfo(name = "create_date") val mCreateDate: String = System.currentTimeMillis().toString()
 )
