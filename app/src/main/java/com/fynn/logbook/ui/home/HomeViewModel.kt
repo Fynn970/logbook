@@ -1,20 +1,13 @@
-package com.fynn.logbook.home
+package com.fynn.logbook.ui.home
 
-import android.widget.Toast
-import androidx.lifecycle.viewModelScope
-import androidx.room.util.copy
 import com.fynn.logbook.base.BaseViewMolder
 import com.fynn.logbook.base.IUiEvent
+import com.fynn.logbook.base.IUiState
 import com.fynn.logbook.bean.ExperimentInfo
-import com.fynn.logbook.repository.AppRepository
 import com.fynn.logbook.repository.IAppRepostory
-import com.fynn.logbook.util.getApplicationContext
 import com.fynn.logbook.util.showToast
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class HomeViewModel constructor(val repository: IAppRepostory) :
+class HomeViewModel constructor(private val repository: IAppRepostory) :
     BaseViewMolder<HomeState, HomeIntent>() {
 
 
@@ -27,7 +20,7 @@ class HomeViewModel constructor(val repository: IAppRepostory) :
             is HomeIntent.GetAllExperiment -> {
                 getAllExperiment()
             }
-            is HomeIntent.SaveExperiment-> {
+            is HomeIntent.SaveExperiment -> {
                 saveExperimentInfo(intent.info)
             }
         }
@@ -49,25 +42,21 @@ class HomeViewModel constructor(val repository: IAppRepostory) :
     }
 
     private fun getAllExperiment() {
-
-        viewModelScope.launch {
-            try {
-
-                val list = repository.getExperimentList()
-                sendUiState {
-                    copy(list = list)
-                }
-            } catch (e: Exception) {
-
+        scope {
+            val list = repository.getExperimentList()
+            sendUiState {
+                copy(list = list)
             }
         }
     }
+}
 
 
-    private fun ToastInfo(it: String) {
-        viewModelScope.launch {
-            showToast(it)
-        }
-    }
+data class HomeState(
+    val list: List<ExperimentInfo> = emptyList(),
+) : IUiState
 
+sealed class HomeIntent : IUiEvent {
+    object GetAllExperiment: HomeIntent()
+    data class SaveExperiment(val info: ExperimentInfo): HomeIntent()
 }

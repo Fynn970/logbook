@@ -12,17 +12,18 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-abstract class BaseViewMolder<UiState: IUiState, UiIntent: IUiEvent>: ViewModel() {
+abstract class BaseViewMolder<UiState : IUiState, UiIntent : IUiEvent> : ViewModel() {
 
     protected val _uiStateFlow = MutableStateFlow(initUiState())
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow.asStateFlow()
     private val _uiIntentFlow: Channel<UiIntent> = Channel()
     val uiIntentFlow: Flow<UiIntent> = _uiIntentFlow.receiveAsFlow()
-
+    private val _loadUiIntentFlow: Channel<LoadUIState> = Channel()
+    val loadUiIntentFlow: Flow<LoadUIState> = _loadUiIntentFlow.receiveAsFlow()
     protected abstract fun initUiState(): UiState
 
-    protected fun sendUiState(copy:UiState.() -> UiState){
-        _uiStateFlow.update{copy(_uiStateFlow.value)}
+    protected fun sendUiState(copy: UiState.() -> UiState) {
+        _uiStateFlow.update { copy(_uiStateFlow.value) }
     }
 
     protected abstract fun handleIntent(intent: IUiEvent)
@@ -41,12 +42,33 @@ abstract class BaseViewMolder<UiState: IUiState, UiIntent: IUiEvent>: ViewModel(
         }
     }
 
-    fun scope(block:suspend ()->Unit){
+    /**
+     * 发送当前加载状态：Loading、Error
+     */
+    private fun sendLoadUiIntent(loadUiIntent: LoadUIState) {
+        viewModelScope.launch {
+            _loadUiIntentFlow.send(loadUiIntent)
+        }
+    }
+
+    fun scope(
+        isShowLoading: Boolean = true, requestFail: String.() -> Unit = {
+            sendLoadUiIntent(LoadUIState.onError(this))
+        }, block: suspend () -> Unit
+    ) {
         viewModelScope.launch {
             try {
+                if (isShowLoading) {
+                    sendLoadUiIntent(LoadUIState.Loading(true))
+                }
                 block()
-            }catch (e: Exception){
+            } catch (e: Exception) {
+                requestFail.invoke(e.message.toString())
                 Log.e("error", e.message + "  ")
+            } finally {
+                if (isShowLoading) {
+                    sendLoadUiIntent(LoadUIState.Loading(false))
+                }
             }
         }
     }

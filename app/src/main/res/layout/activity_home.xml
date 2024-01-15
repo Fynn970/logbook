@@ -5,46 +5,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".home.HomeActivity">
+    tools:context=".ui.home.HomeActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="3dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingVertical="8dp">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/white"-->
+<!--        android:elevation="3dp"-->
+<!--        android:gravity="center_vertical"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:paddingVertical="8dp">-->
 
-        <View
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="16dp" />
+<!--        <View-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:layout_marginStart="16dp" />-->
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="实验列表"
-            android:textSize="20sp" />
+<!--        <TextView-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_weight="1"-->
+<!--            android:gravity="center"-->
+<!--            android:text="实验列表"-->
+<!--            android:textSize="20sp" />-->
 
-        <RelativeLayout
-            android:id="@+id/rl_add_experiment"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:padding="5dp"
-            android:layout_marginEnd="16dp">
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/rl_add_experiment"-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:padding="5dp"-->
+<!--            android:layout_marginEnd="16dp">-->
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/btn_add_blue" />
+<!--            <ImageView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:src="@drawable/btn_add_blue" />-->
 
-        </RelativeLayout>
+<!--        </RelativeLayout>-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_info"

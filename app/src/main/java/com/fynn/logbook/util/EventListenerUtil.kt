@@ -45,6 +45,21 @@ fun <T, A, B> Flow<T>.observeState(
     }
 }
 
+fun <T> Flow<T>.observeState(
+    lifecycleOwner: LifecycleOwner,
+    action: (T) -> Unit
+){
+    lifecycleOwner.lifecycleScope.launch {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            this@observeState.map {
+                it
+            }.distinctUntilChanged().collect { it ->
+                action.invoke(it)
+            }
+        }
+    }
+}
+
 
 internal data class StateTuple1<A>(val a: A)
 internal data class StateTuple2<A, B>(val a: A, val b: B)

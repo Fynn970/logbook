@@ -1,41 +1,35 @@
-package com.fynn.logbook.home
+package com.fynn.logbook.ui.home
 
 import android.os.Bundle
-import android.text.TextUtils
-import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fynn.logbook.R
 import com.fynn.logbook.adapter.HomeListAdapter
 import com.fynn.logbook.base.BaseActivity
+import com.fynn.logbook.base.LoadUIState
 import com.fynn.logbook.bean.ExperimentInfo
 import com.fynn.logbook.databinding.ActivityHomeBinding
+import com.fynn.logbook.ui.addexperiment.AddExperimentActivity
 import com.fynn.logbook.util.observeState
+import com.fynn.logbook.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::inflate) {
     private lateinit var mAdapter: HomeListAdapter
-    @Inject lateinit var viewModel: HomeViewModel
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    @Inject
+    lateinit var viewModel: HomeViewModel
+    override fun initView() {
+        setOperate(R.drawable.btn_add_blue) {
+            intentView(AddExperimentActivity::class.java)
+        }
         mAdapter = HomeListAdapter(this)
         binding.rvInfo.let {
             it.layoutManager = LinearLayoutManager(this)
             it.adapter = mAdapter
         }
-        initClick()
     }
 
-    private fun initClick() {
-        binding.rlAddExperiment.setOnClickListener {
-            val info = ExperimentInfo(mName = "daosdaosd")
-            viewModel.sendUiIntent(HomeIntent.SaveExperiment(info))
-        }
-    }
 
     override fun initData() {
         viewModel.sendUiIntent(HomeIntent.GetAllExperiment)
@@ -43,8 +37,26 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
 
     override fun initEvent() {
         viewModel.uiStateFlow.run {
-            observeState(this@HomeActivity, HomeState::list){
+            observeState(this@HomeActivity, HomeState::list) {
                 mAdapter.setData(it)
+            }
+        }
+
+        viewModel.loadUiIntentFlow.run {
+            observeState(this@HomeActivity) {
+                when (it) {
+                    is LoadUIState.Loading -> {
+                        if (it.isShow) {
+                            showLoading()
+                        } else {
+                            hideLoading()
+                        }
+                    }
+
+                    is LoadUIState.onError -> {
+                        showToast(it.errorMsg)
+                    }
+                }
             }
         }
     }
