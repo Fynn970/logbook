@@ -4,33 +4,51 @@ import com.fynn.logbook.base.BaseViewMolder
 import com.fynn.logbook.base.IUiEvent
 import com.fynn.logbook.base.IUiState
 import com.fynn.logbook.bean.ExperimentInfo
-import com.fynn.logbook.repository.AppRepository
 import com.fynn.logbook.repository.IAppRepostory
 import com.fynn.logbook.util.showToast
 
-class AddExperimentViewModel(private val repository: IAppRepostory):
+class AddExperimentViewModel(private val repository: IAppRepostory) :
     BaseViewMolder<AddExperimentState, AddExperimentIntent>() {
     override fun initUiState(): AddExperimentState {
         return AddExperimentState()
     }
 
     override fun handleIntent(intent: IUiEvent) {
-        when(intent){
-            is AddExperimentIntent.SaveExperiment->{
-                saveExperimentInfo(intent.info)
+        when (intent) {
+            is AddExperimentIntent.SaveExperiment -> {
+                saveExperimentInfo(
+                    intent.earTagNumber,
+                    intent.projectName,
+                    intent.animalMerchant,
+                    intent.timeInterval,
+                    intent.isAlive
+                )
             }
         }
     }
-    private fun saveExperimentInfo(info:ExperimentInfo){
+
+    private fun saveExperimentInfo(
+        earTagNumber: String,
+        projectName: String,
+        animalMerchant: String,
+        timeInterval: String,
+        alive: Int
+    ) {
         scope {
-            val saveExperiment = repository.saveExperiment(info)
-            if (saveExperiment){
+            val saveInfo = ExperimentInfo(
+                mEarTagNumber = earTagNumber,
+                mProcessName = projectName,
+                mAnimalState = alive,
+                mDayInterval = timeInterval.toInt(),
+                animalMerchants = animalMerchant
+            )
+            val saveExperiment = repository.saveExperiment(saveInfo)
+            if (saveExperiment) {
                 sendUiState {
                     copy(isFinishView = true)
                 }
                 showToast("保存成功")
-
-            }else{
+            } else {
                 showToast("保存失败")
             }
         }
@@ -43,5 +61,11 @@ data class AddExperimentState(
 
 
 sealed class AddExperimentIntent : IUiEvent {
-    data class SaveExperiment(val info: ExperimentInfo): AddExperimentIntent()
+    data class SaveExperiment(
+        val earTagNumber: String,
+        val projectName: String,
+        val animalMerchant: String,
+        val timeInterval: String,
+        val isAlive: Int
+    ) : AddExperimentIntent()
 }

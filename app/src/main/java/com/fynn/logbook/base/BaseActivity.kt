@@ -10,14 +10,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.viewbinding.ViewBinding
 import com.fynn.logbook.databinding.BaseViewBinding
+import com.fynn.logbook.util.observeState
+import com.fynn.logbook.util.showToast
 import com.fynn.logbook.view.LoadingDialog
 
-abstract class BaseActivity<VB : ViewBinding>(
+abstract class BaseActivity<VB : ViewBinding,VM: BaseViewMolder<*,*>>(
     val inflater: (LayoutInflater) -> VB
 ): AppCompatActivity() {
     private lateinit var baseBinding: BaseViewBinding
     private lateinit var dialog: LoadingDialog
     private var _binding: VB? = null
+    private lateinit var _viewModel:VM
     protected val binding: VB
         get() = requireNotNull(_binding){
             "The property of binding has been destroyed."
@@ -33,18 +36,40 @@ abstract class BaseActivity<VB : ViewBinding>(
         baseBinding.rlBack.setOnClickListener {
             backClickListener()
         }
-
+        _viewModel = getViewModel()
         dialog = LoadingDialog()
+        initLoadEvent()
         initView()
         initData()
         initEvent()
     }
 
+    abstract fun  getViewModel():VM
     open fun initView(){
 
     }
     abstract fun initData()
     abstract fun initEvent()
+
+    private fun initLoadEvent(){
+        _viewModel.loadUiIntentFlow.run {
+            observeState(this@BaseActivity) {
+                when (it) {
+                    is LoadUIState.Loading -> {
+                        if (it.isShow) {
+                            showLoading()
+                        } else {
+                            hideLoading()
+                        }
+                    }
+
+                    is LoadUIState.onError -> {
+                        showToast(it.errorMsg)
+                    }
+                }
+            }
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
@@ -74,8 +99,10 @@ abstract class BaseActivity<VB : ViewBinding>(
         finish()
     }
 
-    fun <T> intentView(classa: Class<T>){
-        startActivity(Intent(this, classa))
+    fun <T> intentView(classa: Class<T>, bundle: Bundle = Bundle()){
+        val intent = Intent(this, classa)
+        intent.putExtra("bundle", bundle)
+        startActivity(intent)
     }
 
     fun setOperate(@DrawableRes drawable: Int, clickListener: ()->Unit){

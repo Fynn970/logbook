@@ -5,8 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.fynn.logbook.bean.ExperimentInfo
+import com.fynn.logbook.bean.RecordInfo
 
-@Database(entities = [ExperimentInfo::class], version = 1)
+@Database(entities = [ExperimentInfo::class, RecordInfo::class], version = 1)
 abstract class AppDb : RoomDatabase() {
     abstract fun experimentDao(): AppDao
 
