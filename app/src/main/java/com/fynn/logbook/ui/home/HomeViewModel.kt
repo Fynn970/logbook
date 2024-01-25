@@ -42,12 +42,12 @@ class HomeViewModel constructor(private val repository: IAppRepostory) :
     }
 
     private fun getAllExperiment() {
-        scope {
-            val list = repository.getExperimentList()
-            sendUiState {
-                copy(list = list)
-            }
-        }
+//        scope {
+//            val list = repository.getExperimentList()
+//            sendUiState {
+//                copy(list = list)
+//            }
+//        }
     }
 }
 

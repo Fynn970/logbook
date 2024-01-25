@@ -12,12 +12,15 @@ interface AppDao {
     @Query("SELECT * FROM expermentsamples")
     suspend fun getAllExperment():MutableList<ExperimentInfo>
 
+    @Query("SELECT * FROM expermentsamples WHERE animal_state = :type")
+    suspend fun getTypeExperment(type: Int):MutableList<ExperimentInfo>
+
     @Insert(entity = ExperimentInfo::class)
     suspend fun saveExperment(info: ExperimentInfo):Long
 
     @Insert(entity = RecordInfo::class)
     suspend fun saveRecord(info: RecordInfo): Long
 
-    @Query("SELECT * FROM RECORDINFO WHERE experiment_id = experiment_id")
+    @Query("SELECT * FROM RECORDINFO WHERE experiment_id = :experimentId")
     suspend fun getRecordByExperimentId(experimentId: Long):MutableList<RecordInfo>
 }

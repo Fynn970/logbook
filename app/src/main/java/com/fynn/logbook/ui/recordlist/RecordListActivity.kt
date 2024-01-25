@@ -4,16 +4,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.fynn.logbook.R
 import com.fynn.logbook.base.BaseActivity
+import com.fynn.logbook.base.BaseViewMolder
 import com.fynn.logbook.databinding.ActivityRecordListBinding
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-class RecordListActivity : BaseActivity<ActivityRecordListBinding, RecordListViewModel>(ActivityRecordListBinding::inflate) {
+@AndroidEntryPoint
+class RecordListActivity : BaseActivity<ActivityRecordListBinding>(ActivityRecordListBinding::inflate) {
 
     @Inject
     lateinit var viewModel: RecordListViewModel
     private var mExperimentId:Long = 0
 
-    override fun getViewModel(): RecordListViewModel {
+    override fun getViewModel(): BaseViewMolder<*, *> {
         return viewModel
     }
 

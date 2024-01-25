@@ -12,8 +12,8 @@ class AppRepository:IAppRepostory {
         return AppDb.getDB(getApplicationContext()).experimentDao()
     }
 
-    override suspend fun getExperimentList(): MutableList<ExperimentInfo> {
-        return getAppDb().getAllExperment();
+    override suspend fun getExperimentList(type:Int): MutableList<ExperimentInfo> {
+        return getAppDb().getTypeExperment(type);
     }
 
     override suspend fun saveExperiment(info: ExperimentInfo): Boolean {

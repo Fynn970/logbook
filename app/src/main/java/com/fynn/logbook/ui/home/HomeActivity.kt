@@ -1,36 +1,24 @@
 package com.fynn.logbook.ui.home
 
-import android.content.Context
-import android.os.Bundle
-import android.util.Log
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.fynn.logbook.R
-import com.fynn.logbook.adapter.HomeListAdapter
+import com.fynn.logbook.adapter.HomePageAdapter
 import com.fynn.logbook.base.BaseActivity
-import com.fynn.logbook.base.BaseAdapter
-import com.fynn.logbook.base.BaseViewHolder
 import com.fynn.logbook.base.BaseViewMolder
-import com.fynn.logbook.base.IUiEvent
-import com.fynn.logbook.base.IUiState
-import com.fynn.logbook.base.LoadUIState
-import com.fynn.logbook.bean.ExperimentInfo
 import com.fynn.logbook.databinding.ActivityHomeBinding
-import com.fynn.logbook.databinding.ItemHomeBinding
 import com.fynn.logbook.ui.addexperiment.AddExperimentActivity
-import com.fynn.logbook.ui.recordlist.RecordListActivity
-import com.fynn.logbook.util.NanoIdUtil
-import com.fynn.logbook.util.observeState
-import com.fynn.logbook.util.showToast
+import com.fynn.logbook.ui.home.fragment.LiveListFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(
+class HomeActivity : BaseActivity<ActivityHomeBinding>(
     ActivityHomeBinding::inflate) {
-    private lateinit var mAdapter: BaseAdapter<ExperimentInfo, ItemHomeBinding>
     @Inject
     lateinit var viewModel: HomeViewModel
-    override fun getViewModel(): HomeViewModel {
+    private val list = mutableListOf<Fragment>()
+    override fun getViewModel(): BaseViewMolder<*,*> {
         return viewModel
     }
 
@@ -38,43 +26,39 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(
         setOperate(R.drawable.btn_add_blue) {
             intentView(AddExperimentActivity::class.java)
         }
+        val livefragment = LiveListFragment()
+        livefragment.setViewType(1)
+        list.add(livefragment)
+        val abandonfragment = LiveListFragment()
+        abandonfragment.setViewType(0)
+        list.add(abandonfragment)
+        binding.viewpager.let {
+            it.adapter = HomePageAdapter(this, list)
+            it.currentItem = 0
+            it.registerOnPageChangeCallback(object : OnPageChangeCallback() {
 
-        mAdapter = object : BaseAdapter<ExperimentInfo, ItemHomeBinding>(this, mutableListOf<ExperimentInfo>() , ItemHomeBinding::inflate){
-            override fun convert(
-                mContext: Context,
-                holder: BaseViewHolder<ItemHomeBinding>,
-                t: ExperimentInfo,
-                select_position: Int
-            ) {
-                holder.vb.tvName.text = t.mEarTagNumber
-                holder.itemView.setOnClickListener {
-                    val bundel = Bundle()
-                    bundel.putLong("experimentId", t.mExperimentId)
-                    intentView(RecordListActivity::class.java, bundel)
+                override fun onPageSelected(position: Int) {
+
+
                 }
-            }
+
+            })
         }
 
-
-        binding.rvInfo.let {
-            it.layoutManager = LinearLayoutManager(this)
-            it.adapter = mAdapter
+        binding.llLive.setOnClickListener {
+            binding.viewpager.currentItem = 0
         }
 
-
+        binding.llAbandon.setOnClickListener {
+            binding.viewpager.currentItem = 1
+        }
     }
 
 
     override fun initData() {
-        viewModel.sendUiIntent(HomeIntent.GetAllExperiment)
     }
 
     override fun initEvent() {
-        viewModel.uiStateFlow.run {
-            observeState(this@HomeActivity, HomeState::list) {
-                mAdapter.updateData(it)
-            }
-        }
 
 
     }

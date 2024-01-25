@@ -14,13 +14,13 @@ import com.fynn.logbook.util.observeState
 import com.fynn.logbook.util.showToast
 import com.fynn.logbook.view.LoadingDialog
 
-abstract class BaseActivity<VB : ViewBinding,VM: BaseViewMolder<*,*>>(
+abstract class BaseActivity<VB : ViewBinding>(
     val inflater: (LayoutInflater) -> VB
 ): AppCompatActivity() {
     private lateinit var baseBinding: BaseViewBinding
     private lateinit var dialog: LoadingDialog
     private var _binding: VB? = null
-    private lateinit var _viewModel:VM
+    private lateinit var _viewModel:BaseViewMolder<*,*>
     protected val binding: VB
         get() = requireNotNull(_binding){
             "The property of binding has been destroyed."
@@ -44,7 +44,7 @@ abstract class BaseActivity<VB : ViewBinding,VM: BaseViewMolder<*,*>>(
         initEvent()
     }
 
-    abstract fun  getViewModel():VM
+    abstract fun  getViewModel():BaseViewMolder<*,*>
     open fun initView(){
 
     }

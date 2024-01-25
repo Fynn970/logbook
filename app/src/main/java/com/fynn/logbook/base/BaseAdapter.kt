@@ -8,13 +8,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseAdapter<T, VB:ViewBinding>(
+abstract class BaseAdapter<T, VB : ViewBinding>(
     private val mContext: Context,
-    private val mData:MutableList<T>,
-    val inflater: (LayoutInflater,ViewGroup,Boolean, ) -> VB): RecyclerView.Adapter<BaseViewHolder<VB>>() {
+    private val mData: MutableList<T>,
+    val inflater: (LayoutInflater, ViewGroup, Boolean) -> VB
+) : RecyclerView.Adapter<BaseViewHolder<VB>>() {
 
-    private lateinit var mLongItemClickListener: onLongItemClickListener
-    private lateinit var mItemClickListener: OnItemClickListener
+    private var mLongItemClickListener: onLongItemClickListener? = null
+    private var mItemClickListener: OnItemClickListener? = null
 
     fun updateData(data: List<T>) {
         mData.clear()
@@ -36,21 +37,18 @@ abstract class BaseAdapter<T, VB:ViewBinding>(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<VB>, position: Int) {
-        convert(mContext, holder, mData[position], position)
         holder.itemView.setOnClickListener { v ->
-            if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(v, position)
-            }
+            mItemClickListener?.onItemClick(v, position)
         }
-        if (mLongItemClickListener != null) {
-            holder.itemView.setOnLongClickListener { v ->
-                mLongItemClickListener.onLongItemClick(v, position)
-                true
-            }
+        holder.itemView.setOnLongClickListener { v ->
+            mLongItemClickListener?.onLongItemClick(v, position)
+            true
         }
+        convert(mContext, holder, mData[position], position)
+
     }
 
-     abstract fun convert(
+    abstract fun convert(
         mContext: Context,
         holder: BaseViewHolder<VB>,
         t: T,

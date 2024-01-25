@@ -3,7 +3,7 @@ package com.fynn.logbook.ui.addexperiment
 import android.text.TextUtils
 import com.fynn.logbook.R
 import com.fynn.logbook.base.BaseActivity
-import com.fynn.logbook.bean.ExperimentInfo
+import com.fynn.logbook.base.BaseViewMolder
 import com.fynn.logbook.databinding.ActivityAddExperimentBinding
 import com.fynn.logbook.util.observeState
 import com.fynn.logbook.util.showToast
@@ -12,13 +12,11 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddExperimentActivity :
-    BaseActivity<ActivityAddExperimentBinding, AddExperimentViewModel>(ActivityAddExperimentBinding::inflate) {
-
-    private var info: ExperimentInfo? = null
+    BaseActivity<ActivityAddExperimentBinding>(ActivityAddExperimentBinding::inflate) {
 
     @Inject
     lateinit var viewModel: AddExperimentViewModel
-    override fun getViewModel(): AddExperimentViewModel {
+    override fun getViewModel(): BaseViewMolder<*,*> {
         return viewModel
     }
 
