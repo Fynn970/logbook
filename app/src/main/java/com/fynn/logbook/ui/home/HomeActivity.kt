@@ -38,7 +38,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(
             it.registerOnPageChangeCallback(object : OnPageChangeCallback() {
 
                 override fun onPageSelected(position: Int) {
-
+                    binding.ivLive.setImageResource(if (position != 0) R.drawable.ic_strong_normal else R.drawable.ic_strong_selected)
 
                 }
 

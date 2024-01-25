@@ -36,6 +36,11 @@ class LiveListFragment :
         return viewModel
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.sendUiIntent(LiveListUiEvent.GetAllLiveExperiment(mViewType))
+    }
+
 
     override fun initView() {
         mAdapter = object : BaseAdapter<ExperimentInfo, ItemHomeBinding>(
