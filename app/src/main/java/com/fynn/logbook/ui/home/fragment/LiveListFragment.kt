@@ -59,7 +59,15 @@ class LiveListFragment :
                     it.tvProcessName.text = t.mProcessName
                     it.tvAnimalMerchants.text = t.animalMerchants
                     it.tvIntervalSet.text = "${t.mDayInterval}天"
-                    it.tvIntervalState.text = if (DateUtils.campareLongDate(t.mUpdateDate, t.mDayInterval)) "达标" else "不达标"
+                    if (t.mNewRecordCreateDate == 0L){
+                        it.tvIntervalState.text = "达标"
+                    }else {
+                        it.tvIntervalState.text = if (DateUtils.campareLongDate(
+                                t.mNewRecordCreateDate,
+                                t.mDayInterval
+                            )
+                        ) "达标" else "不达标"
+                    }
                     it.tvAnimalState.text = if (t.mAnimalState == 1)"存活" else "死亡"
                 }
                 holder.itemView.setOnClickListener {

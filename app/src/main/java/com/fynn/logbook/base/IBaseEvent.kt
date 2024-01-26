@@ -3,7 +3,12 @@ package com.fynn.logbook.base
 import androidx.annotation.Keep
 
 @Keep
-interface IUiState
+interface IUiState{
+}
+
+interface BaseUiState:IUiState{
+   open val isFinishView:Boolean
+}
 
 @Keep
 interface IUiEvent

@@ -101,7 +101,7 @@ abstract class BaseActivity<VB : ViewBinding>(
 
     fun <T> intentView(classa: Class<T>, bundle: Bundle = Bundle()){
         val intent = Intent(this, classa)
-        intent.putExtra("bundle", bundle)
+        intent.putExtras(bundle)
         startActivity(intent)
     }
 

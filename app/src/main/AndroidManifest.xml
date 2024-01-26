@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Logbook"
         tools:targetApi="31">
         <activity
+            android:name=".ui.addrecord.AddRecordActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.recordlist.RecordListActivity"
             android:exported="false" />
         <activity

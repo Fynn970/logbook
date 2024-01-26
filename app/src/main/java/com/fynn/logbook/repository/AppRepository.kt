@@ -21,7 +21,18 @@ class AppRepository:IAppRepostory {
     }
 
     override suspend fun saveRecord(info: RecordInfo): Boolean {
-        return getAppDb().saveRecord(info) != -1L
+        val experimentInfo = getAppDb().getExperimentById(info.mExperimentId);
+        experimentInfo?.let {
+            val id = getAppDb().saveRecord(info)
+            if (id != -1L) {
+                val result = getAppDb().getRecordByRecordId(id)
+                result?.let {
+                    getAppDb().updateExperimentById(result.mExperimentId, result.mRecordCreateDate)
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     override suspend fun getRecordList(experimentId: Long): MutableList<RecordInfo> {

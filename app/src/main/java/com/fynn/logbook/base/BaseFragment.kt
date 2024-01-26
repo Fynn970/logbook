@@ -62,7 +62,7 @@ abstract class BaseFragment<VB: ViewBinding>(val inflater: (LayoutInflater) -> V
 
     fun <T> intentView(classa: Class<T>, bundle: Bundle = Bundle()){
         val intent = Intent(requireContext(), classa)
-        intent.putExtra("bundle", bundle)
+        intent.putExtras(bundle)
         startActivity(intent)
     }
 

@@ -3,6 +3,7 @@ package com.fynn.logbook.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import com.fynn.logbook.bean.ExperimentInfo
 import com.fynn.logbook.bean.RecordInfo
 
@@ -18,9 +19,19 @@ interface AppDao {
     @Insert(entity = ExperimentInfo::class)
     suspend fun saveExperment(info: ExperimentInfo):Long
 
+    @Transaction
     @Insert(entity = RecordInfo::class)
     suspend fun saveRecord(info: RecordInfo): Long
 
     @Query("SELECT * FROM RECORDINFO WHERE experiment_id = :experimentId")
     suspend fun getRecordByExperimentId(experimentId: Long):MutableList<RecordInfo>
+
+    @Query("SELECT * FROM RECORDINFO WHERE mRecordId = :id")
+    suspend fun getRecordByRecordId(id:Long):RecordInfo?
+
+    @Query("SELECT * FROM EXPERMENTSAMPLES WHERE mExperimentId = :id")
+    suspend fun getExperimentById(id:Long):ExperimentInfo?
+
+    @Query("UPDATE EXPERMENTSAMPLES SET new_record_create_date = :newRecordCreateTime WHERE mExperimentId = :experimentId")
+    suspend fun updateExperimentById(experimentId: Long, newRecordCreateTime: Long)
 }
