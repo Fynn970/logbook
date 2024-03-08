@@ -23,17 +23,17 @@ class AddExperimentActivity :
     override fun initView() {
         setOperate(R.drawable.ic_save) {
             val earTagNumber = binding.etEarTagNumber.text.toString()
-            val projectName = binding.tvProject.text.toString()
+//            val projectName = binding.tvProject.text.toString()
             val timeInterval = binding.etInterval.text.toString()
             val animalMerchant = binding.etAnimalMerchants.text.toString()
             if (TextUtils.isEmpty(earTagNumber)) {
                 showToast("请输入耳标号")
                 return@setOperate
             }
-            if (TextUtils.isEmpty(projectName)){
-                showToast("请选择项目")
-                return@setOperate
-            }
+//            if (TextUtils.isEmpty(projectName)){
+//                showToast("请选择项目")
+//                return@setOperate
+//            }
             if (TextUtils.isEmpty(timeInterval)){
                 showToast("请输入间隔天数")
                 return@setOperate
@@ -42,7 +42,7 @@ class AddExperimentActivity :
                 showToast("请输入动物厂商")
                 return@setOperate
             }
-            viewModel.sendUiIntent(AddExperimentIntent.SaveExperiment(earTagNumber, projectName,animalMerchant, timeInterval, if (binding.swState.isChecked) 0 else 1))
+            viewModel.sendUiIntent(AddExperimentIntent.SaveExperiment(earTagNumber,animalMerchant, timeInterval, if (binding.swState.isChecked) 0 else 1))
 
         }
 

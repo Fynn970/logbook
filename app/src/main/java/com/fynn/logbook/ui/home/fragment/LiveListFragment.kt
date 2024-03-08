@@ -56,7 +56,7 @@ class LiveListFragment :
             ) {
                 holder.vb.let {
                     it.tvEarTagNum.text = t.mEarTagNumber
-                    it.tvProcessName.text = t.mProcessName
+//                    it.tvProcessName.text = t.mProcessName
                     it.tvAnimalMerchants.text = t.animalMerchants
                     it.tvIntervalSet.text = "${t.mDayInterval}天"
                     if (t.mNewRecordCreateDate == 0L){
@@ -72,7 +72,7 @@ class LiveListFragment :
                 }
                 holder.itemView.setOnClickListener {
                     val bundel = Bundle()
-                    bundel.putLong("experimentId", t.mExperimentId)
+                    bundel.putSerializable("experiment", t)
                     intentView(RecordListActivity::class.java, bundel)
                 }
             }

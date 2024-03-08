@@ -4,12 +4,155 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
+    android:id="@+id/root_view"
     tools:context=".ui.recordlist.RecordListActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_record"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        android:paddingHorizontal="15dp"
+        android:overScrollMode="never">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="耳标号:"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_ear_tag_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="耳标号"
+                android:inputType="text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="间隔天数:"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_interval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="间隔天数"
+                android:inputType="number"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="动物厂商:"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_animal_merchants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="动物厂商"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="状态:"
+                android:textSize="16sp" />
+
+            <RadioGroup
+                android:id="@+id/rg_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_live"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="存活" />
+
+                <RadioButton
+                    android:id="@+id/rb_died"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="死亡" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="实验记录最后新增时间:"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/tv_record_last_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="操作状态:"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/tv_operate_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="实验记录:"
+                android:textSize="16sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_record"
+                android:layout_width="match_parent"
+                android:nestedScrollingEnabled="false"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp" />
+
+            <TextView
+                android:id="@+id/tv_add_record"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="18dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_border"
+                android:gravity="center"
+                android:paddingVertical="8dp"
+                android:text="添加一条"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

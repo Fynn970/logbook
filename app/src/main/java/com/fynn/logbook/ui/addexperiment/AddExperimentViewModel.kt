@@ -18,7 +18,6 @@ class AddExperimentViewModel(private val repository: IAppRepostory) :
             is AddExperimentIntent.SaveExperiment -> {
                 saveExperimentInfo(
                     intent.earTagNumber,
-                    intent.projectName,
                     intent.animalMerchant,
                     intent.timeInterval,
                     intent.isAlive
@@ -29,7 +28,6 @@ class AddExperimentViewModel(private val repository: IAppRepostory) :
 
     private fun saveExperimentInfo(
         earTagNumber: String,
-        projectName: String,
         animalMerchant: String,
         timeInterval: String,
         alive: Int
@@ -37,7 +35,6 @@ class AddExperimentViewModel(private val repository: IAppRepostory) :
         scope {
             val saveInfo = ExperimentInfo(
                 mEarTagNumber = earTagNumber,
-                mProcessName = projectName,
                 mAnimalState = alive,
                 mDayInterval = timeInterval.toInt(),
                 animalMerchants = animalMerchant
@@ -63,7 +60,7 @@ data class AddExperimentState(
 sealed class AddExperimentIntent : IUiEvent {
     data class SaveExperiment(
         val earTagNumber: String,
-        val projectName: String,
+//        val projectName: String,
         val animalMerchant: String,
         val timeInterval: String,
         val isAlive: Int

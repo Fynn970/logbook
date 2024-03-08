@@ -20,6 +20,9 @@ object DateUtils {
     }
 
     fun longToString(date:Long): String {
+        if (date == 0L){
+            return ""
+        }
         // 转化为指定格式的字符串
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         return sdf.format(Date(date))

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.fynn.logbook.bean.ExperimentInfo
 import com.fynn.logbook.bean.RecordInfo
 
@@ -33,5 +34,8 @@ interface AppDao {
     suspend fun getExperimentById(id:Long):ExperimentInfo?
 
     @Query("UPDATE EXPERMENTSAMPLES SET new_record_create_date = :newRecordCreateTime WHERE mExperimentId = :experimentId")
-    suspend fun updateExperimentById(experimentId: Long, newRecordCreateTime: Long)
+    suspend fun updateExperimentNewRecordTimeById(experimentId: Long, newRecordCreateTime: Long)
+
+    @Update
+    suspend fun updateExperiment(experimentInfo: ExperimentInfo):Int
 }

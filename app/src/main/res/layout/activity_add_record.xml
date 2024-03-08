@@ -21,6 +21,38 @@
         android:layout_height="wrap_content"
         android:hint="编号"/>
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="使用项目:"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="5dp">
+
+        <TextView
+            android:id="@+id/tv_project"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="asdsad"
+            android:gravity="center_vertical"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/ic_select"
+            android:scaleType="centerInside"/>
+
+    </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -4,6 +4,7 @@ import com.fynn.logbook.base.BaseUiState
 import com.fynn.logbook.base.BaseViewMolder
 import com.fynn.logbook.base.IUiEvent
 import com.fynn.logbook.base.IUiState
+import com.fynn.logbook.bean.ExperimentInfo
 import com.fynn.logbook.bean.RecordInfo
 import com.fynn.logbook.repository.IAppRepostory
 import com.fynn.logbook.util.showToast
@@ -22,7 +23,24 @@ class RecordListViewModel(private val repository: IAppRepostory): BaseViewMolder
                 mRoomNumber = intent.roomNum, mRecordWeight = intent.animalWeight)
                 saveRecordInfo(recordInfo)
             }
+            is RecordListIntent.GetExperimentById->{
+                getExperimentById(intent.id)
+            }
+            is RecordListIntent.UpdateExperiment->{
+                updateExperiment(intent.experiment)
+            }
+        }
+    }
 
+    private fun updateExperiment(experiment: ExperimentInfo){
+        scope {
+            val result = repository.updateExperiment(experiment)
+            if (result){
+                showToast("修改成功")
+                sendUiState { copy(experiment = experiment) }
+            }else{
+                showToast("修改失败")
+            }
         }
     }
 
@@ -47,16 +65,30 @@ class RecordListViewModel(private val repository: IAppRepostory): BaseViewMolder
             }
         }
     }
+
+    private fun getExperimentById(id: Long){
+        scope {
+            val result = repository.getExperimentById(id)
+            if (result != null) {
+                sendUiState { copy(experiment = result) }
+            }else{
+                showToast("获取失败，请稍后再试！")
+            }
+        }
+    }
 }
 
 
 data class RecordListState(
     val recordList:List<RecordInfo> = emptyList(),
+    val experiment: ExperimentInfo = ExperimentInfo(animalMerchants = "", mDayInterval = 0, mEarTagNumber = ""),
     override val isFinishView:Boolean = false
 ):BaseUiState
 
 sealed class RecordListIntent:IUiEvent{
     data class GetRecordListByExperimentId(val experimentId:Long):RecordListIntent()
+    data class GetExperimentById(val id: Long): RecordListIntent()
+    data class UpdateExperiment(val experiment: ExperimentInfo): RecordListIntent()
     data class SaveRecordInfo(val experimentId: Long, val recordNum:String, val roomNum: String, val animalWeight: String):RecordListIntent()
 }
 

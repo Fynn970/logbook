@@ -105,11 +105,21 @@ abstract class BaseActivity<VB : ViewBinding>(
         startActivity(intent)
     }
 
+    fun <T> intentViewResult(classa: Class<T>, bundle: Bundle = Bundle()){
+        val intent = Intent(this, classa)
+        intent.putExtras(bundle)
+        startActivityForResult(intent, 10000)
+    }
+
     fun setOperate(@DrawableRes drawable: Int, clickListener: ()->Unit){
         baseBinding.rlOperate.visibility = View.VISIBLE
         baseBinding.ivOpera.setImageDrawable(ResourcesCompat.getDrawable(resources, drawable, null))
         baseBinding.rlOperate.setOnClickListener {
             clickListener.invoke()
         }
+    }
+
+    fun setOperateGone(){
+        baseBinding.rlOperate.visibility = View.GONE
     }
 }

@@ -27,7 +27,7 @@ class AppRepository:IAppRepostory {
             if (id != -1L) {
                 val result = getAppDb().getRecordByRecordId(id)
                 result?.let {
-                    getAppDb().updateExperimentById(result.mExperimentId, result.mRecordCreateDate)
+                    getAppDb().updateExperimentNewRecordTimeById(result.mExperimentId, result.mRecordCreateDate)
                     return true
                 }
             }
@@ -37,6 +37,14 @@ class AppRepository:IAppRepostory {
 
     override suspend fun getRecordList(experimentId: Long): MutableList<RecordInfo> {
         return getAppDb().getRecordByExperimentId(experimentId)
+    }
+
+    override suspend fun getExperimentById(id: Long): ExperimentInfo? {
+        return getAppDb().getExperimentById(id)
+    }
+
+    override suspend fun updateExperiment(experimentInfo: ExperimentInfo): Boolean {
+        return getAppDb().updateExperiment(experimentInfo) == 1
     }
 
 

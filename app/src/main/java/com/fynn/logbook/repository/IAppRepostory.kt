@@ -9,4 +9,6 @@ interface IAppRepostory {
     suspend fun saveExperiment(info: ExperimentInfo):Boolean
     suspend fun saveRecord(info:RecordInfo):Boolean
     suspend fun getRecordList(experimentId:Long):MutableList<RecordInfo>
+    suspend fun getExperimentById(id: Long): ExperimentInfo?
+    suspend fun updateExperiment(experimentInfo: ExperimentInfo): Boolean
 }
