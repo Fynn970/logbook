@@ -62,4 +62,8 @@ class AddExperimentActivity :
         }
     }
 
+    override fun initState() {
+
+    }
+
 }

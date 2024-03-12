@@ -36,8 +36,8 @@ class RecordListViewModel(private val repository: IAppRepostory): BaseViewMolder
         scope {
             val result = repository.updateExperiment(experiment)
             if (result){
+                sendDataShared { copy(experiment = experiment) }
                 showToast("修改成功")
-                sendUiState { copy(experiment = experiment) }
             }else{
                 showToast("修改失败")
             }
@@ -70,7 +70,7 @@ class RecordListViewModel(private val repository: IAppRepostory): BaseViewMolder
         scope {
             val result = repository.getExperimentById(id)
             if (result != null) {
-                sendUiState { copy(experiment = result) }
+                sendDataShared { copy(experiment = result) }
             }else{
                 showToast("获取失败，请稍后再试！")
             }
@@ -81,7 +81,7 @@ class RecordListViewModel(private val repository: IAppRepostory): BaseViewMolder
 
 data class RecordListState(
     val recordList:List<RecordInfo> = emptyList(),
-    val experiment: ExperimentInfo = ExperimentInfo(animalMerchants = "", mDayInterval = 0, mEarTagNumber = ""),
+    val experiment: ExperimentInfo? = null,
     override val isFinishView:Boolean = false
 ):BaseUiState
 

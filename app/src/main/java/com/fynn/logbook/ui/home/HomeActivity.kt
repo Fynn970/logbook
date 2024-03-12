@@ -62,4 +62,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(
 
 
     }
+
+    override fun initState() {
+
+    }
 }

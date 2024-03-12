@@ -5,9 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,10 +24,18 @@ abstract class BaseViewMolder<UiState : IUiState, UiIntent : IUiEvent> : ViewMod
     val uiIntentFlow: Flow<UiIntent> = _uiIntentFlow.receiveAsFlow()
     private val _loadUiIntentFlow: Channel<LoadUIState> = Channel()
     val loadUiIntentFlow: Flow<LoadUIState> = _loadUiIntentFlow.receiveAsFlow()
+    private val _dataSharedFlow = MutableSharedFlow<UiState>()
+    val dataSharedFlow: SharedFlow<UiState> = _dataSharedFlow.asSharedFlow()
     protected abstract fun initUiState(): UiState
 
     protected fun sendUiState(copy: UiState.() -> UiState) {
         _uiStateFlow.update { copy(_uiStateFlow.value) }
+    }
+
+    protected suspend fun sendDataShared(copy: UiState.() -> UiState){
+//        viewModelScope.launch {
+        _dataSharedFlow.emit(copy(_dataSharedFlow.first()) )
+//        }
     }
 
     protected abstract fun handleIntent(intent: IUiEvent)

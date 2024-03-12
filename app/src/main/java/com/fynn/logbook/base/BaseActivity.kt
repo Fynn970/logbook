@@ -50,7 +50,7 @@ abstract class BaseActivity<VB : ViewBinding>(
     }
     abstract fun initData()
     abstract fun initEvent()
-
+    abstract fun initState()
     private fun initLoadEvent(){
         _viewModel.loadUiIntentFlow.run {
             observeState(this@BaseActivity) {

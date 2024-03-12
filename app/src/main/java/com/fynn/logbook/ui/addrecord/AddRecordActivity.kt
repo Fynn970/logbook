@@ -62,4 +62,8 @@ class AddRecordActivity : BaseActivity<ActivityAddRecordBinding>(ActivityAddReco
         }
     }
 
+    override fun initState() {
+
+    }
+
 }

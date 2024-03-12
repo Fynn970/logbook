@@ -12,6 +12,10 @@ import android.view.View.OnFocusChangeListener
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.RadioGroup.OnCheckedChangeListener
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fynn.logbook.R
 import com.fynn.logbook.base.BaseActivity
@@ -25,8 +29,18 @@ import com.fynn.logbook.databinding.ItemRecordInfoBinding
 import com.fynn.logbook.ui.addrecord.AddRecordActivity
 import com.fynn.logbook.ui.home.fragment.LiveListUiState
 import com.fynn.logbook.util.DateUtils
+import com.fynn.logbook.util.StateTuple1
+import com.fynn.logbook.util.hideSoftKey
+import com.fynn.logbook.util.observeEvent
 import com.fynn.logbook.util.observeState
+import com.fynn.logbook.util.twoBtnDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -118,9 +132,13 @@ class RecordListActivity :
             tvRecordLastTime.setText(DateUtils.longToString(mExperiment.mNewRecordCreateDate))
 
             tvAddRecord.setOnClickListener {
-                val bundle = Bundle()
-                bundle.putLong("experimentId", mExperiment.mExperimentId)
-                intentView(AddRecordActivity::class.java, bundle)
+                if (!judgeOperateState()) {
+                    twoBtnDialog(this@RecordListActivity, "状态未达标，是否确定添加") {
+                        val bundle = Bundle()
+                        bundle.putLong("experimentId", mExperiment.mExperimentId)
+                        intentView(AddRecordActivity::class.java, bundle)
+                    }
+                }
             }
             rvRecord.layoutManager = LinearLayoutManager(this@RecordListActivity)
             rvRecord.adapter = mAdapter
@@ -179,23 +197,36 @@ class RecordListActivity :
     }
 
     override fun initEvent() {
+        viewModel.dataSharedFlow.run {
+            observeEvent(
+                this@RecordListActivity,
+                viewModel.viewModelScope,
+                RecordListState::experiment
+            ) {
+                if (it != null && !TextUtils.isEmpty(it.mEarTagNumber)) {
+                    it.let {
+                        isEdited = false
+                        val focusedView = currentFocus
+                        if (focusedView is EditText) {
+                            focusedView.clearFocus()
+                            hideSoftKey(this@RecordListActivity, focusedView)
+                        }
+                        mOriginExperiment = it
+                        mExperiment = mOriginExperiment
+                        handleExperimentData()
+                    }
+
+                }
+            }
+        }
+    }
+
+
+    override fun initState() {
         viewModel.uiStateFlow.run {
             observeState(this@RecordListActivity, RecordListState::recordList) {
                 mAdapter.updateData(it)
             }
-            observeState(this@RecordListActivity, RecordListState::experiment) {
-                if (it != null && !TextUtils.isEmpty(it.mEarTagNumber)) {
-                    isEdited = false
-                    val focusedView = currentFocus
-                    if (focusedView is EditText){
-                        focusedView.clearFocus()
-                    }
-                    mOriginExperiment = it
-                    mExperiment = mOriginExperiment
-                    handleExperimentData()
-                }
-            }
-
         }
     }
 
