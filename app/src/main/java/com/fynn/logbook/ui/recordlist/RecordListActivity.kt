@@ -138,6 +138,10 @@ class RecordListActivity :
                         bundle.putLong("experimentId", mExperiment.mExperimentId)
                         intentView(AddRecordActivity::class.java, bundle)
                     }
+                }else{
+                    val bundle = Bundle()
+                    bundle.putLong("experimentId", mExperiment.mExperimentId)
+                    intentView(AddRecordActivity::class.java, bundle)
                 }
             }
             rvRecord.layoutManager = LinearLayoutManager(this@RecordListActivity)
@@ -152,36 +156,39 @@ class RecordListActivity :
                     }
                 }
             })
-            etInterval.setOnFocusChangeListener(object : OnFocusChangeListener {
-                override fun onFocusChange(v: View?, hasFocus: Boolean) {
-                    if (hasFocus) {
-                        etInterval.addTextChangedListener(textWatcher)
-                    } else {
-                        etInterval.removeTextChangedListener(textWatcher)
-                    }
+            etInterval.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    etInterval.addTextChangedListener(textWatcher)
+                } else {
+                    etInterval.removeTextChangedListener(textWatcher)
                 }
-            })
-            etAnimalMerchants.setOnFocusChangeListener(object : OnFocusChangeListener {
-                override fun onFocusChange(v: View?, hasFocus: Boolean) {
+            }
+            etAnimalMerchants.onFocusChangeListener =
+                OnFocusChangeListener { v, hasFocus ->
                     if (hasFocus) {
                         etAnimalMerchants.addTextChangedListener(textWatcher)
                     } else {
                         etAnimalMerchants.removeTextChangedListener(textWatcher)
                     }
                 }
-            })
-            rgRadioGroup.setOnCheckedChangeListener(object : OnCheckedChangeListener {
-                override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-                    if (!isEdited) {
-                        isEdited = true
-                    }
+            rgRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+                if (!isEdited) {
+                    isEdited = true
                 }
-            })
+            }
         }
     }
 
     override fun backClickListener() {
-        super.backClickListener()
+        if (isEdited){
+            twoBtnDialog(this, "是否放弃修改"){
+                mExperiment = mOriginExperiment.copy()
+                handleExperimentData()
+            }
+        }else{
+            super.backClickListener()
+        }
+
     }
 
     override fun onResume() {

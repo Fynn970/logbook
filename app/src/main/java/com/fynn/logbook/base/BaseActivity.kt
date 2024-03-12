@@ -40,8 +40,9 @@ abstract class BaseActivity<VB : ViewBinding>(
         dialog = LoadingDialog()
         initLoadEvent()
         initView()
-        initData()
         initEvent()
+        initState()
+        initData()
     }
 
     abstract fun  getViewModel():BaseViewMolder<*,*>
