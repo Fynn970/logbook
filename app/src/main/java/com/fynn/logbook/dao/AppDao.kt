@@ -38,4 +38,15 @@ interface AppDao {
 
     @Update
     suspend fun updateExperiment(experimentInfo: ExperimentInfo):Int
+
+    @Query("DELETE FROM EXPERMENTSAMPLES WHERE mExperimentId = :id")
+    suspend fun deleteExperimentById(id:Long):Int
+
+    @Query("DELETE FROM RECORDINFO WHERE experiment_id = :id")
+    suspend fun deleteRecordByExperimentId(id:Long):Int
+    @Query("DELETE FROM RECORDINFO WHERE mRecordId = :id")
+    suspend fun deleteRecordById(id:Long):Int
+
+    @Query("SELECT * FROM RECORDINFO WHERE experiment_id = :id and create_date = (SELECT MAX(create_date) FROM recordinfo)")
+    suspend fun getLastCreateRecordByExperimentId(id: Long):RecordInfo?
 }

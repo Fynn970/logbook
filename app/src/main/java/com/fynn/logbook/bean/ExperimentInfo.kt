@@ -17,4 +17,8 @@ data class ExperimentInfo(
     @ColumnInfo(name = "new_record_create_date") var mNewRecordCreateDate: Long=0,
     @ColumnInfo(name = "update_date") var mUpdateDate: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "create_date") var mCreateDate: Long = System.currentTimeMillis()
-):Serializable
+):Serializable{
+    override fun toString(): String {
+        return "ExperimentInfo(mExperimentId=$mExperimentId, mEarTagNumber='$mEarTagNumber', mAnimalState=$mAnimalState, animalMerchants='$animalMerchants', mDayInterval=$mDayInterval, mNewRecordCreateDate=$mNewRecordCreateDate, mUpdateDate=$mUpdateDate, mCreateDate=$mCreateDate)"
+    }
+}

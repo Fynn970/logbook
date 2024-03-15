@@ -32,11 +32,14 @@ abstract class BaseViewMolder<UiState : IUiState, UiIntent : IUiEvent> : ViewMod
         _uiStateFlow.update { copy(_uiStateFlow.value) }
     }
 
-    protected suspend fun sendDataShared(copy: UiState.() -> UiState){
-//        viewModelScope.launch {
-        _dataSharedFlow.emit(copy(_dataSharedFlow.first()) )
-//        }
+    protected suspend fun sendDataShared(state:UiState){
+        _dataSharedFlow.emit(state)
     }
+//    protected suspend fun sendDataShared(state: UiState){
+////        viewModelScope.launch {
+//        _dataSharedFlow.emit(state)
+////        }
+//    }
 
     protected abstract fun handleIntent(intent: IUiEvent)
 

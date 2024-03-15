@@ -56,6 +56,7 @@ class AddRecordActivity : BaseActivity<ActivityAddRecordBinding>(ActivityAddReco
         viewModel.uiStateFlow.run {
             observeState(this@AddRecordActivity, RecordListState::isFinishView){
                 if (it){
+                    setResult(1000)
                     finish()
                 }
             }

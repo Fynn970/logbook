@@ -11,4 +11,7 @@ interface IAppRepostory {
     suspend fun getRecordList(experimentId:Long):MutableList<RecordInfo>
     suspend fun getExperimentById(id: Long): ExperimentInfo?
     suspend fun updateExperiment(experimentInfo: ExperimentInfo): Boolean
+    suspend fun deleteExperiment(id: Long): Boolean
+
+    suspend fun deleteRecordById(id:Long):Boolean
 }

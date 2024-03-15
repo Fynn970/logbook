@@ -36,7 +36,11 @@ class AppRepository:IAppRepostory {
     }
 
     override suspend fun getRecordList(experimentId: Long): MutableList<RecordInfo> {
-        return getAppDb().getRecordByExperimentId(experimentId)
+        val experimentInfo = getAppDb().getExperimentById(experimentId);
+        experimentInfo?.let {
+            return getAppDb().getRecordByExperimentId(experimentId)
+        }
+        return mutableListOf()
     }
 
     override suspend fun getExperimentById(id: Long): ExperimentInfo? {
@@ -45,6 +49,19 @@ class AppRepository:IAppRepostory {
 
     override suspend fun updateExperiment(experimentInfo: ExperimentInfo): Boolean {
         return getAppDb().updateExperiment(experimentInfo) == 1
+    }
+
+    override suspend fun deleteExperiment(id: Long): Boolean {
+        getAppDb().deleteRecordByExperimentId(id)
+        return getAppDb().deleteExperimentById(id) > 0
+    }
+
+    override suspend fun deleteRecordById(id: Long): Boolean {
+        val deleteResult = getAppDb().deleteRecordById(id) > 0
+        if (deleteResult){
+
+        }
+        return
     }
 
 

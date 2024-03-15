@@ -29,6 +29,21 @@ class RecordListViewModel(private val repository: IAppRepostory): BaseViewMolder
             is RecordListIntent.UpdateExperiment->{
                 updateExperiment(intent.experiment)
             }
+            is RecordListIntent.DeleteRecordById->{
+                deleteRecordById(intent.id)
+            }
+        }
+    }
+
+    private fun deleteRecordById(id: Long){
+        scope {
+            val result = repository.deleteRecordById(id)
+            if (result){
+                sendDataShared(RecordListState(isDelete = true))
+            }else{
+                sendDataShared(RecordListState(isDelete = false))
+                showToast("删除失败")
+            }
         }
     }
 
@@ -36,7 +51,7 @@ class RecordListViewModel(private val repository: IAppRepostory): BaseViewMolder
         scope {
             val result = repository.updateExperiment(experiment)
             if (result){
-                sendDataShared { copy(experiment = experiment) }
+                sendDataShared (RecordListState(experiment = experiment))
                 showToast("修改成功")
             }else{
                 showToast("修改失败")
@@ -70,7 +85,7 @@ class RecordListViewModel(private val repository: IAppRepostory): BaseViewMolder
         scope {
             val result = repository.getExperimentById(id)
             if (result != null) {
-                sendDataShared { copy(experiment = result) }
+                sendDataShared (RecordListState(experiment = result))
             }else{
                 showToast("获取失败，请稍后再试！")
             }
@@ -82,7 +97,8 @@ class RecordListViewModel(private val repository: IAppRepostory): BaseViewMolder
 data class RecordListState(
     val recordList:List<RecordInfo> = emptyList(),
     val experiment: ExperimentInfo? = null,
-    override val isFinishView:Boolean = false
+    override val isFinishView:Boolean = false,
+    val isDelete: Boolean = true
 ):BaseUiState
 
 sealed class RecordListIntent:IUiEvent{
@@ -90,5 +106,6 @@ sealed class RecordListIntent:IUiEvent{
     data class GetExperimentById(val id: Long): RecordListIntent()
     data class UpdateExperiment(val experiment: ExperimentInfo): RecordListIntent()
     data class SaveRecordInfo(val experimentId: Long, val recordNum:String, val roomNum: String, val animalWeight: String):RecordListIntent()
+    data class DeleteRecordById(val id:Long):RecordListIntent()
 }
 

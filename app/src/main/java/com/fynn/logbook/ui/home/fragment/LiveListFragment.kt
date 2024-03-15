@@ -3,10 +3,13 @@ package com.fynn.logbook.ui.home.fragment
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import android.view.View.OnLongClickListener
 import android.widget.AdapterView.OnItemClickListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cocosw.bottomsheet.BottomSheet
 import com.fynn.logbook.base.BaseAdapter
 import com.fynn.logbook.base.BaseFragment
 import com.fynn.logbook.base.BaseViewHolder
@@ -43,6 +46,7 @@ class LiveListFragment :
 
 
     override fun initView() {
+        viewModel.setViewType(mViewType)
         mAdapter = object : BaseAdapter<ExperimentInfo, ItemHomeBinding>(
             requireContext(),
             mutableListOf(),
@@ -75,6 +79,19 @@ class LiveListFragment :
                     bundel.putSerializable("experiment", t)
                     intentView(RecordListActivity::class.java, bundel)
                 }
+
+                holder.itemView.setOnLongClickListener(object : OnLongClickListener{
+                    override fun onLongClick(v: View?): Boolean {
+                        BottomSheet.Builder(requireActivity()).sheet(0, "删除")
+                            .listener(object : MenuItem.OnMenuItemClickListener{
+                                override fun onMenuItemClick(item: MenuItem): Boolean {
+                                    viewModel.sendUiIntent(LiveListUiEvent.DeleteExperimentById(t.mExperimentId))
+                                    return true
+                                }
+                            }).show()
+                        return true
+                    }
+                })
             }
         }
         binding.refresh.setOnRefreshListener {

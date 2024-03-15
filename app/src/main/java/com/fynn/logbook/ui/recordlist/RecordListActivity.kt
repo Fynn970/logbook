@@ -1,14 +1,17 @@
 package com.fynn.logbook.ui.recordlist
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.view.View.OnFocusChangeListener
+import android.view.View.OnLongClickListener
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.RadioGroup.OnCheckedChangeListener
@@ -17,6 +20,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cocosw.bottomsheet.BottomSheet
 import com.fynn.logbook.R
 import com.fynn.logbook.base.BaseActivity
 import com.fynn.logbook.base.BaseAdapter
@@ -27,6 +31,7 @@ import com.fynn.logbook.bean.RecordInfo
 import com.fynn.logbook.databinding.ActivityRecordListBinding
 import com.fynn.logbook.databinding.ItemRecordInfoBinding
 import com.fynn.logbook.ui.addrecord.AddRecordActivity
+import com.fynn.logbook.ui.home.fragment.LiveListUiEvent
 import com.fynn.logbook.ui.home.fragment.LiveListUiState
 import com.fynn.logbook.util.DateUtils
 import com.fynn.logbook.util.StateTuple1
@@ -113,6 +118,19 @@ class RecordListActivity :
                 holder.vb.tvAnimalWeight.text = "${t.mRecordWeight}"
                 holder.vb.tvCreateDate.text = DateUtils.longToString(t.mRecordCreateDate)
                 holder.vb.tvUpdateDate.text = DateUtils.longToString(t.mRecordUpdateDate)
+
+                holder.itemView.setOnLongClickListener(object : OnLongClickListener{
+                    override fun onLongClick(v: View?): Boolean {
+                        BottomSheet.Builder(this@RecordListActivity).sheet(0, "删除")
+                            .listener(object : MenuItem.OnMenuItemClickListener{
+                                override fun onMenuItemClick(item: MenuItem): Boolean {
+                                    viewModel.sendUiIntent(RecordListIntent.DeleteRecordById(t.mRecordId))
+                                    return true
+                                }
+                            }).show()
+                        return true
+                    }
+                })
             }
         }
         handleExperimentData()
@@ -136,12 +154,12 @@ class RecordListActivity :
                     twoBtnDialog(this@RecordListActivity, "状态未达标，是否确定添加") {
                         val bundle = Bundle()
                         bundle.putLong("experimentId", mExperiment.mExperimentId)
-                        intentView(AddRecordActivity::class.java, bundle)
+                        intentViewResult(AddRecordActivity::class.java, bundle)
                     }
-                }else{
+                } else {
                     val bundle = Bundle()
                     bundle.putLong("experimentId", mExperiment.mExperimentId)
-                    intentView(AddRecordActivity::class.java, bundle)
+                    intentViewResult(AddRecordActivity::class.java, bundle)
                 }
             }
             rvRecord.layoutManager = LinearLayoutManager(this@RecordListActivity)
@@ -180,12 +198,12 @@ class RecordListActivity :
     }
 
     override fun backClickListener() {
-        if (isEdited){
-            twoBtnDialog(this, "是否放弃修改"){
+        if (isEdited) {
+            twoBtnDialog(this, "是否放弃修改") {
                 mExperiment = mOriginExperiment.copy()
                 handleExperimentData()
             }
-        }else{
+        } else {
             super.backClickListener()
         }
 
@@ -194,13 +212,24 @@ class RecordListActivity :
     override fun onResume() {
         super.onResume()
 
-        if (mExperiment.mExperimentId != -1L) {
-            viewModel.sendUiIntent(RecordListIntent.GetExperimentById(mExperiment.mExperimentId))
-            viewModel.sendUiIntent(RecordListIntent.GetRecordListByExperimentId(mExperiment.mExperimentId))
+//        if (mExperiment.mExperimentId != -1L) {
+//            viewModel.sendUiIntent(RecordListIntent.GetExperimentById(mExperiment.mExperimentId))
+//            viewModel.sendUiIntent(RecordListIntent.GetRecordListByExperimentId(mExperiment.mExperimentId))
+//        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == 1000) {
+            if (mExperiment.mExperimentId != -1L) {
+                viewModel.sendUiIntent(RecordListIntent.GetExperimentById(mExperiment.mExperimentId))
+                viewModel.sendUiIntent(RecordListIntent.GetRecordListByExperimentId(mExperiment.mExperimentId))
+            }
         }
     }
 
     override fun initData() {
+        viewModel.sendUiIntent(RecordListIntent.GetRecordListByExperimentId(mExperiment.mExperimentId))
     }
 
     override fun initEvent() {
@@ -223,6 +252,14 @@ class RecordListActivity :
                         handleExperimentData()
                     }
 
+                }
+            }
+
+            observeEvent(this@RecordListActivity,
+                viewModel.viewModelScope,
+                RecordListState::isDelete){
+                if (it){
+                    viewModel.sendUiIntent(RecordListIntent.GetRecordListByExperimentId(mExperiment.mExperimentId))
                 }
             }
         }

@@ -106,10 +106,10 @@ abstract class BaseActivity<VB : ViewBinding>(
         startActivity(intent)
     }
 
-    fun <T> intentViewResult(classa: Class<T>, bundle: Bundle = Bundle()){
+    fun <T> intentViewResult(classa: Class<T>, bundle: Bundle = Bundle(), requestCode:Int = 1000){
         val intent = Intent(this, classa)
         intent.putExtras(bundle)
-        startActivityForResult(intent, 10000)
+        startActivityForResult(intent, requestCode)
     }
 
     fun setOperate(@DrawableRes drawable: Int, clickListener: ()->Unit){
